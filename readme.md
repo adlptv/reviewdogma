@@ -1,54 +1,46 @@
-<div align="center">
-
-# 🛡️ ReviewDogma — Code Review Policy Engine
-
-**Stop relying on reviewer memory. Define rules as code.**
+# ReviewDogma — Code Review Policy Engine
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black.svg)](https://nextjs.org/)
-</div>
 
-## 📖 What is ReviewDogma?
+Define code review rules as YAML. ReviewDogma reads PR diffs, runs policy checks, and posts findings as review comments — catching patterns that static analysis tools don't cover.
 
-Code review consistency depends on human reviewers. Anti-patterns slip through because reviewers are tired, distracted, or don't know what to look for. Static analysis tools (ESLint, Sonar) catch syntax issues but miss **business-context anti-patterns**.
-
-ReviewDogma lets you **define review policies as code** (YAML). It reads PR diffs, checks them against your policies, and generates automated review checklists — catching what static analysis misses.
-
-## ✨ Features
-
-- 📜 **Policy DSL** — Define rules in YAML: "No `any` type in new files", "Every API route must have rate limiting"
-- 🔍 **AST-Based Detection** — Parse JS/TS/Python with tree-sitter, check against custom rules
-- 🤖 **GitHub App Integration** — Auto-post review comments on PRs via webhook
-- 📊 **Team Dashboard** — Anti-pattern trends, review coverage stats, common issues leaderboard
-- 🏪 **Policy Marketplace** — Share and import community policies
-- 📝 **Monaco Editor** — YAML syntax highlighting, live validation, auto-complete
-- 🌓 **Dark/Light Theme** — Glassmorphism UI with Framer Motion
-
-## 📸 Screenshots
+## Screenshots
 
 | PR Diff Analysis with Violations | YAML Policy DSL Editor |
 |:---:|:---:|
-| ![YAML Policy DSL Editor](screenshots/dashboard.png) |
+| ![PR Diff Analysis with Violations](screenshots/hero.png) | ![YAML Policy DSL Editor](screenshots/dashboard.png) |
 
-> 💡 *Run locally to see the full interactive experience: `pnpm dev` then open http://localhost:3000*
+## Features
 
+- Policy DSL in YAML: define patterns, severity levels, file exclusions, and custom messages
+- AST-based detection with tree-sitter for JavaScript, TypeScript, and Python
+- GitHub App integration: receives webhooks, posts review comments on PRs
+- Team dashboard with anti-pattern trends and review coverage stats
+- Policy marketplace for sharing rules between teams
+- Monaco Editor for YAML with syntax highlighting and live validation
 
-## 🏗️ Architecture
+## Example Policy
 
+```yaml
+name: TypeScript Safety Rules
+severity: high
+rules:
+  - id: no-explicit-any
+    description: New files must not use the any type
+    pattern: ": any"
+    excludeExistingFiles: true
+    message: Use a specific type instead of any
+
+  - id: rate-limit-api
+    description: Every API route must include rate limiting
+    pattern: "export async function (GET|POST|PUT|DELETE)"
+    check: "must_include: rateLimit"
+    message: Add rate limiting middleware to this route"
 ```
-┌──────────────────────────────────────────┐
-│              ReviewDogma                  │
-├──────────────┬──────────────┬────────────┤
-│   Frontend   │   Backend    │  Engine    │
-│  Next.js 14  │  API Routes  │  AST Parser│
-│  Monaco      │  Prisma ORM  │  tree-sitter│
-│  shadcn/ui   │  GitHub API  │  YAML Parser│
-│  recharts    │  Webhook     │  Policy Eval│
-└──────────────┴──────────────┴────────────┘
-```
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 git clone https://github.com/adlptv/reviewdogma.git
@@ -57,60 +49,43 @@ pnpm install
 pnpm dev
 ```
 
-Docker:
+Or:
 ```bash
 docker-compose up
 ```
 
-## 📝 Example Policy
+## Architecture
 
-```yaml
-name: "TypeScript Safety Rules"
-severity: high
-rules:
-  - id: "no-explicit-any"
-    description: "New files must not use `any` type"
-    pattern: ": any"
-    excludeExistingFiles: true
-    message: "Use a specific type instead of `any`"
-
-  - id: "rate-limit-api"
-    description: "Every API route must have rate limiting"
-    pattern: "export async function (GET|POST|PUT|DELETE)"
-    check: "must_include: 'rateLimit'"
-    message: "Add rate limiting middleware to this route"
-
-  - id: "no-console-production"
-    description: "No console.log in production code"
-    pattern: "console\\.log"
-    excludeFiles: ["*.test.*", "*.spec.*"]
+```
+apps/reviewdogma/
+├── src/app/          # Pages: landing, policies, dashboard, marketplace, settings
+│   └── api/          # policies, analyze, webhook/github, dashboard/stats, marketplace, health
+├── src/components/   # PolicyEditor (Monaco), PRDiff, Dashboard, UI primitives
+├── src/lib/          # AST parser, policy evaluator, validators (Zod)
+├── prisma/           # SQLite: Policy, Analysis, ReviewStat
+└── tests/
 ```
 
-## 📡 API Endpoints
+## API
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET/POST | `/api/policies` | List/create policies |
-| GET/PUT/DELETE | `/api/policies/[id]` | Manage policy |
-| POST | `/api/policies/validate` | Validate YAML syntax |
-| POST | `/api/analyze` | Analyze diff against policies |
-| POST | `/api/webhook/github` | GitHub webhook receiver |
-| GET | `/api/dashboard/stats` | Dashboard statistics |
-| GET | `/api/marketplace` | Community policies |
-| GET | `/api/health` | Health check |
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| GET/POST | /api/policies | List or create policies |
+| GET/PUT/DELETE | /api/policies/[id] | Manage a policy |
+| POST | /api/policies/validate | Validate YAML syntax |
+| POST | /api/analyze | Analyze code diff against policies |
+| POST | /api/webhook/github | Receive GitHub webhook events |
+| GET | /api/dashboard/stats | Aggregated review statistics |
+| GET | /api/marketplace | List community policies |
+| GET | /api/health | Health check |
 
-## 🔒 Security
+## Security
 
-- ✅ Zod validation all routes
-- ✅ GitHub webhook secret verification (timing-safe)
-- ✅ Rate limiting
-- ✅ Helmet.js headers
-- ✅ Input sanitization
+- Zod validation on all routes
+- GitHub webhook secret verification with timing-safe comparison
+- Rate limiting
+- Helmet.js headers
 
-## 📄 License
+## License
 
-MIT © [adlptv](https://github.com/adlptv)
-
----
-
-⭐ Star if this helps your team review better!
+MIT
