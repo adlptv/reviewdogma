@@ -8,9 +8,9 @@ Define code review rules as YAML. ReviewDogma reads PR diffs, runs policy checks
 
 ## Screenshots
 
-| PR Diff Analysis with Violations | YAML Policy DSL Editor |
+| Landing Page (PR Review) | Policy Editor (YAML DSL) |
 |:---:|:---:|
-| ![PR Diff Analysis with Violations](screenshots/hero.png) | ![YAML Policy DSL Editor](screenshots/dashboard.png) |
+| ![Policy editor: YAML DSL with syntax highlighting and live validation](screenshots/dashboard.png) |
 
 ## Features
 
