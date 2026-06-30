@@ -27,9 +27,9 @@ ReviewDogma lets you **define review policies as code** (YAML). It reads PR diff
 
 ## 📸 Screenshots
 
-| Landing Page | Dashboard |
+| PR Diff Analysis with Violations | YAML Policy DSL Editor |
 |:---:|:---:|
-| ![Reviewdogma Hero](screenshots/hero.png) | ![Reviewdogma Dashboard](screenshots/dashboard.png) |
+| ![YAML Policy DSL Editor](screenshots/dashboard.png) |
 
 > 💡 *Run locally to see the full interactive experience: `pnpm dev` then open http://localhost:3000*
 
