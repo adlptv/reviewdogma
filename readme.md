@@ -25,6 +25,15 @@ ReviewDogma lets you **define review policies as code** (YAML). It reads PR diff
 - 📝 **Monaco Editor** — YAML syntax highlighting, live validation, auto-complete
 - 🌓 **Dark/Light Theme** — Glassmorphism UI with Framer Motion
 
+## 📸 Screenshots
+
+| Landing Page | Dashboard |
+|:---:|:---:|
+| ![Reviewdogma Hero](screenshots/hero.png) | ![Reviewdogma Dashboard](screenshots/dashboard.png) |
+
+> 💡 *Run locally to see the full interactive experience: `pnpm dev` then open http://localhost:3000*
+
+
 ## 🏗️ Architecture
 
 ```
